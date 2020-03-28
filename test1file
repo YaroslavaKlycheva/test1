@@ -1,0 +1,52 @@
+package com;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class Main {
+
+    public static void main(String[] args) {
+        
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+
+            String url = "jdbc:mysql://195.19.44.146:3306/user1?useUnicode=true&serverTimezone=UTC";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(url, "user1", "user1");
+            System.out.println("Connected...!");
+
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery("select * from Ekipazh JOIN Rejs ON Rejs_nomer = Rejs.nomer WHERE Rejs.nomer=1");
+            int Rejs_nomer = 0;
+            int Ekipazh_nomer = 0;
+            while (resultSet.next()) {
+                Rejs_nomer = resultSet.getInt("Rejs_nomer");
+                Ekipazh_nomer = resultSet.getInt("kod");
+                System.out.println("Номер Рейса: " + resultSet.getInt("Rejs_nomer") + ", Номер экипажа: " + resultSet.getInt("kod"));
+            }
+            resultSet = statement.executeQuery("select * from Rejs JOIN Samolet ON Rejs.Samolet_nomer = Samolet.nomer WHERE Rejs.nomer=1");
+            while (resultSet.next()) {
+                String model = resultSet.getString("Samolet.model");
+                String tip = resultSet.getString("Samolet.tip");
+                String vmestimost = resultSet.getString("Samolet.vmestimost");
+                System.out.println("Модель самолета: " + resultSet.getInt("Samolet.model") + ", Тип самолета: " + resultSet.getInt("Samolet.tip") + ", Вместимость самолета: " + resultSet.getInt("Samolet.vmestimost"));
+            }
+            resultSet = statement.executeQuery("select * from Sotrudnik JOIN Ekipazh ON Sotrudnik.Ekipazh_kod = Ekipazh.kod JOIN Rejs ON Ekipazh.Rejs_nomer = Rejs.nomer WHERE Rejs.nomer=1");
+            while (resultSet.next()) {
+                dolzhnost = dolzhnost + resultSet.getString("Sotrudnik.dolzhnost");
+                String familja = resultSet.getString("Sotrudnik.familja");
+                String imya = resultSet.getString("Sotrudnik.imya");
+                String stazh = resultSet.getString("Sotrudnik.stazh");
+            }
+
+            System.out.println("Номер Рейса: " + Rejs_nomer + ", Должность сотрудника: " + dolzhnost);
+        }
+
+        }
+
+    }
+}
